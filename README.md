@@ -178,6 +178,12 @@ If you are carefully curating your `title` properties already to ensure no dupli
 
 If this option results in conflicts, you will need to manually override class names instead via the `class_overrides` option.
 
+### enumerate_duplicate_model_names
+
+Even with `use_path_prefixes_for_title_model_names` set to `true`, duplicate model class names can occur. By default, when duplicates are encountered they will be skipped.
+
+Setting `enumerate_duplicate_model_names` to `true` in your config file will result in a number being added to duplicate names starting with 1. For instance, if there are multiple occurrences in the schema of `MyModelName`, the initial occurrence will remain `MyModelName` and subsequent occurrences will be named `MyModelName1`, `MyModelName2` and so on.
+
 ### http_timeout
 
 By default, the timeout for retrieving the schema file via HTTP is 5 seconds. In case there is an error when retrieving the schema, you might try and increase this setting to a higher value.
@@ -190,6 +196,39 @@ This config tells the generator to treat a given content type like another.
 ```yaml
 content_type_overrides:
   application/zip: application/octet-stream
+```
+
+## Supported Extensions
+
+### x-enum-varnames
+
+This extension has been adopted by similar projects such as [OpenAPI Tools](https://github.com/OpenAPITools/openapi-generator/pull/917).
+It is intended to provide user-friendly names for integer Enum members that get generated.
+It is critical that the length of the array matches that of the enum values.
+
+```
+"Colors": {
+   "type": "integer",
+   "format": "int32",
+   "enum": [
+       0,
+       1,
+       2
+   ], 
+  "x-enum-varnames": [
+      "Red",
+      "Green",
+      "Blue"
+   ]
+}
+```
+
+Results in:
+```
+class Color(IntEnum):
+    RED = 0
+    GREEN = 1
+    BLUE = 2
 ```
 
 [changelog.md]: CHANGELOG.md
